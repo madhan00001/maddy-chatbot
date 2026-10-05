@@ -1,0 +1,6 @@
+{
+  "name": "ChatGPT-like LLM & RAG Chatbot",
+  "description": "Production-ready ChatGPT-like AI chatbot with RAG pipeline, semantic search, document ingestion, and conversational memory.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

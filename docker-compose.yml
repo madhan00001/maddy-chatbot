@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rag_chatbot_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_PROVIDER=${LLM_PROVIDER:-google}
+      - LLM_MODEL=${LLM_MODEL:-gemini-3.8-flash}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/chatbot_db
+      - VECTOR_DB_PATH=/app/data/vector_store
+    volumes:
+      - ./backend/data:/app/data
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # PostgreSQL Database (For conversation history & user auth)
+  db:
+    image: postgres:15-alpine
+    container_name: rag_chatbot_postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=chatbot_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
